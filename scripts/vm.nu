@@ -67,7 +67,6 @@ export def pull [] {
     print $"Pulling ($os)-($release) to ($vm_directory)..."
     cd $vm_directory
     quickget $os $release
-    cd -
 }
 
 
@@ -121,5 +120,4 @@ export def run [] {
     print $"Running ($vm)..."
     cd $path
     quickemu --vm $"($vm).conf"
-    cd -
 }
