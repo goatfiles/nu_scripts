@@ -104,7 +104,9 @@ export def remove [] {
 
 
 # TODO
-export def run [] {
+export def run [
+    --display (-d): string = "spice"
+] {
     let choice = (
         base_list |
             prompt fzf_ask "Please choose a vm to run: "
@@ -115,5 +117,5 @@ export def run [] {
 
     print $"Running ($vm)..."
     cd $path
-    quickemu --vm $"($vm | path basename).conf"
+    quickemu --vm $"($vm | path basename).conf" --display $display
 }
