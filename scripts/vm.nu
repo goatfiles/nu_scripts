@@ -94,9 +94,7 @@ export def remove [] {
         prompt fzf_ask "Please choose a vm to remove: "
     )
 
-    let vm = $choice
-    let os = ($vm | split column "-" | get column1 | to text)
-    let path = ($env.QUICKEMU_HOME | path join $os $vm)
+    let path = ($env.QUICKEMU_HOME | path join $choice)
 
     rm --trash -rvfi $path
     rm --trash -rvfi $"($path).conf"
