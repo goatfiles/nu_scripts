@@ -75,10 +75,7 @@ def base_list [] {
     ls $"($env.QUICKEMU_HOME)/*/*" |
     where type == dir |
     get name |
-    each {
-        |it|
-        $it | path basename
-    } |
+    each {str replace $"($env.QUICKEMU_HOME)/" ""} |
     sort --ignore-case |
     uniq
 }
@@ -86,7 +83,7 @@ def base_list [] {
 
 # TODO
 export def list [] {
-    base_list | parse "{os}-{release}"
+    base_list | parse "{os}/{name}-{release}"
 }
 
 
@@ -114,10 +111,9 @@ export def run [] {
     )
 
     let vm = $choice
-    let os = ($vm | split column "-" | get column1 | to text)
-    let path = ($env.QUICKEMU_HOME | path join $os)
+    let path = ($env.QUICKEMU_HOME | path join ($vm | path dirname))
 
     print $"Running ($vm)..."
     cd $path
-    quickemu --vm $"($vm).conf"
+    quickemu --vm $"($vm | path basename).conf"
 }
