@@ -117,3 +117,34 @@ export def run [
     cd $path
     quickemu --vm $"($vm | path basename).conf" --display $display
 }
+
+
+# TODO
+export def clone [] {
+    let choice = (
+        base_list |
+            prompt fzf_ask "Please choose a vm to clone: "
+    )
+
+    let vm = $choice
+    let name = ($choice | parse "{os}/{name}-{release}" | get name.0)
+    let release = ($choice | parse "{os}/{name}-{release}" | get release.0)
+
+    let path = ($env.QUICKEMU_HOME | path join ($vm | path dirname))
+
+    let clone_name = (input $"Name for the clone of ($vm): ")
+    if ($clone_name | is-empty) {
+        error make {msg: "Name of a clone can not be empty."}
+        return
+    }
+
+    let old = ($path | path join ([$name $release] | str join "-"))
+    let new = ($path | path join ([$clone_name $release] | str join "-"))
+
+    echo "Copying vm to new location..."
+    cp -r $old $new
+
+    open $"($old).conf" |
+    str replace --all ([$name $release] | str join "-") ([$clone_name $release] | str join "-") |
+    save $"($new).conf"
+}
