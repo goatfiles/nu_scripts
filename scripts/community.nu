@@ -36,7 +36,7 @@ export def-env up [nb: int = 1] {
 # credit to @/dev/adrien#4649
 # https://discord.com/channels/601130461678272522/615253963645911060/1019056732841967647
 export def-env mkcd [name: path] {
-    cd (mkdir $name -s | first)
+    cd (mkdir $name --verbose | first)
 }
 
 

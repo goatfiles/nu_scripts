@@ -90,7 +90,7 @@ export def mounts [
       $it.options
       | split row ","
       | split column "="
-      | if ($in | columns | any $it == column2) {
+      | if ($in | columns | any {$it == column2}) {
         transpose -i -r -d
       } else {
         get column1
