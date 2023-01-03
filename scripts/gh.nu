@@ -68,3 +68,33 @@ export def "me protection" [
 ] {
     pull (["" "repos" $owner $repo "branches" $branch "protection"] | str collect "/")
 }
+
+
+# TODO: documentation
+export def "me pr" [repo: string = ""] {
+  let choice = (
+    if ($repo | is-empty) {
+      print $"defaulting to current repo, i.e. (git config --local remote.origin.gh-resolved)"
+      gh pr list --json number,title,author,isDraft,labels
+    } else {
+      gh pr -R $repo list --json number,title,author,isDraft,labels
+    }
+    | from json
+    | update author {|it| $it.author.login}
+    | update labels {|it| if (not ($it.labels | is-empty)) { $it.labels | get name | str collect ", " }}
+    | each {|it|
+      $"(ansi yellow_bold)($it.number)(ansi reset) \((ansi default_italic)(ansi default_dimmed)($it.author)(ansi reset)\): ($it.title)"
+    }
+    | to text
+    | fzf --ansi --color
+  )
+
+  if ($choice | is-empty) {
+    error make {msg: "user chose to exit"}
+  }
+
+  let pr = ($choice | parse "{id} {rest}" | get id.0)
+
+  print $"jumping to pr ($pr)..."
+  gh pr checkout $pr
+}
