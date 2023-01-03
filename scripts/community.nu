@@ -144,3 +144,57 @@ export def "cross username" [] {
     $env.USER
   }
 }
+
+
+#
+# Return a git report looking for git repo and submodules
+# in the provided root directory
+#
+# ╭────────┬───────┬───────────╮
+# │  path  │ dirty │ submodule │
+# ├────────┼───────┼───────────┤
+# │ <repo> │ true  │ false     │
+# ╰────────┴───────┴───────────╯
+#
+export def "git report" [
+    root?: string  # The root directory to look for gits repos, pwd if not provided
+    --verbose(-v)  # print debug informations
+    --abs(-a)  # use absolute paths
+    ] {
+
+    let root = if ($root | is-empty) {
+        if ($verbose) {
+            print $"no root provided, using pwd"
+        }
+        $env.PWD
+    } else {
+        $root
+    }
+
+    cd $root
+
+    let x = (glob **/.git)
+    let root = if ($abs) {
+        ''
+    } else {
+        $root
+    }
+
+    let report = (
+        $x
+        | par-each {|path|
+            let repo = ($path | str replace -s $"($root)/" "" | str replace "/.git$" "")
+            if $verbose { print $repo }
+
+            $path
+            | path dirname
+            | {
+                repo: $repo
+                dirty: ((git -C $in diff --stat) != '')
+                submodule: ($path | path type | $in == file)
+                path: ($path | str replace "/.git$" "")
+            }
+        }
+    )
+    $report | sort-by path
+}
