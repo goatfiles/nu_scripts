@@ -183,7 +183,7 @@ export def-env setup [
   }
 
   let show_prompt_indicator = not $use_eldyj_prompt
-  let-env PROMPT_INDICATOR = if ($show_prompt_indicator) { "〉" } else { "" }
+  let-env PROMPT_INDICATOR = if ($show_prompt_indicator) { "> " } else { "" }
   let-env PROMPT_INDICATOR_VI_INSERT = if ($show_prompt_indicator) { ": " } else { "" }
-  let-env PROMPT_INDICATOR_VI_NORMAL = if ($show_prompt_indicator) { "〉" } else { "" }
+  let-env PROMPT_INDICATOR_VI_NORMAL = if ($show_prompt_indicator) { "> " } else { "" }
 }
