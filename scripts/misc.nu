@@ -186,3 +186,7 @@ export def "aoc fetch answers" [
     }
   }
 }
+
+
+# TODO: docstring
+export def-env back [] { cd - }
