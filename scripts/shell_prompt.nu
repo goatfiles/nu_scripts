@@ -169,6 +169,7 @@ def create_right_prompt [] {
 export def-env setup [
     --use-eldyj-prompt: bool
     --use-right-prompt: bool
+    --indicators = {}
 ] {
   let-env PROMPT_COMMAND = if ($use_eldyj_prompt) {
     {create_left_prompt_eldyj}
@@ -183,7 +184,13 @@ export def-env setup [
   }
 
   let show_prompt_indicator = not $use_eldyj_prompt
-  let-env PROMPT_INDICATOR = if ($show_prompt_indicator) { "> " } else { "" }
-  let-env PROMPT_INDICATOR_VI_INSERT = if ($show_prompt_indicator) { ": " } else { "" }
-  let-env PROMPT_INDICATOR_VI_NORMAL = if ($show_prompt_indicator) { "> " } else { "" }
+
+  let indicators = ({
+    plain: "> ",
+    vi: {insert: ": ", normal: "> "}
+  } | merge ($indicators))
+
+  let-env PROMPT_INDICATOR = if ($show_prompt_indicator) { $indicators.plain } else { "" }
+  let-env PROMPT_INDICATOR_VI_INSERT = if ($show_prompt_indicator) { $indicators.vi.insert } else { "" }
+  let-env PROMPT_INDICATOR_VI_NORMAL = if ($show_prompt_indicator) { $indicators.vi.normal } else { "" }
 }
