@@ -156,12 +156,25 @@ def create_left_prompt_eldyj [] {
 
 
 # TODO: documentation
-def create_right_prompt [] {
-    let time_segment = ([
-        (date now | date format '%m/%d/%Y %r')
-    ] | str collect)
+def create_right_prompt [
+  --time: bool
+  --cfg: bool
+] {
+    mut prompt = ""
+    if ($time) {
+        let time_segment = ([
+            (date now | date format '%m/%d/%Y %r')
+        ] | str collect)
 
-    $time_segment
+        $prompt += $time_segment
+    }
+
+    if ($cfg) {
+        let cfg_branch = (cfg branch --show-current)
+        $prompt += $"\(cfg: ($cfg_branch)\)"
+    }
+
+    $prompt
 }
 
 
