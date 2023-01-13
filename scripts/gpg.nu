@@ -132,7 +132,7 @@ export def import [
 
 # TODO: documentation
 export def "make keyring" [
-  keyring: string = ($env | get -i GNUPGHOME | default "~/.gnupg" | path expand)
+  keyring = ($env | get -i GNUPGHOME | default "~/.gnupg" | path expand)
 ] {
   mkdir $keyring
   chmod -R 700 $keyring
