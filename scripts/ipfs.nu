@@ -1,3 +1,20 @@
+def get-last-to-next [nb_chars: int] {
+  split chars
+  | reverse
+  | skip 1
+  | take $nb_chars
+  | reverse
+  | str join
+}
+
+
+def "path add extension" [extension: string] {
+  path parse
+  | upsert extension $extension
+  | path join
+}
+
+
 # TODO: docstring
 export def "struct ls" [
   hash: string  # TODO: arg
@@ -29,3 +46,33 @@ export def "chunk add" [
   $results
 }
 
+
+# TODO: docstring
+export def "cid unpack" [
+  cid: string  # TODO: arg
+  format: string = "base: %b\ncodec: %c\nhash name: %h\nmultihash: %m\ndigest: %d\ncid: %s"   # TODO: arg
+] {
+  ipfs cid format -f $format $cid
+  | lines
+  | split column ": "
+  | transpose -rid
+}
+
+
+# TODO: docstring
+export def "block open" [
+  cid: string  # TODO: arg
+] {
+  let multihash = (ipfs cid format -f "%M" $cid | str upcase)
+  let prefix = ($multihash | get-last-to-next 2)
+  let block = ($prefix | path join $multihash)
+
+  let block_path = (
+    $env | get -i IPFS_PATH | default ($env.HOME | path join .ipfs)
+    | path join blocks $block
+    | path add extension data
+  )
+
+  print $"(ansi red_bold)($block)(ansi white_dimmed) at ($block_path)(ansi reset):"
+  open $block_path | into binary
+}
