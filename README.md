@@ -1,6 +1,9 @@
 # nu_scripts
 The collection of `nushell` scripts for GOATs.
 
+> **Note**  
+> see the list of scripts: [SCRIPTS.md]
+
 ## source the scripts
 in my `nushell` environment configuration file,
 [`env.nu`](https://github.com/goatfiles/dotfiles/blob/main/.config/nushell/env.nu)
