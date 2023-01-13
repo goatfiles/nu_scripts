@@ -112,7 +112,7 @@ export def export [
   --dump_dir: string = "/tmp"
 ] {
   gpg --armor --export | save --force ($dump_dir | path join $pubkeys_file)
-  gpg --armor --export-secret-keys | save --force ($dump_dir | path join $keys_file)
+  gpg --armor --export-secret-keys | save --force ($dump_dir | path join $privkeys_file)
   gpg --export-ownertrust | save --force ($dump_dir | path join $trust_file)
 }
 
@@ -125,14 +125,14 @@ export def import [
   --dump_dir: string = "/tmp"
 ] {
   gpg --import ($dump_dir | path join $pubkeys_file)
-  gpg --import ($dump_dir | path join $keys_file)
+  gpg --import ($dump_dir | path join $privkeys_file)
   gpg --import-ownertrust ($dump_dir | path join $trust_file)
 }
 
 
 # TODO: documentation
 export def "make keyring" [
-  keyring: string = ($env | get -i GNUPGHOME | default "~/.gnupg" | path expand)
+  keyring = ($env | get -i GNUPGHOME | default "~/.gnupg" | path expand)
 ] {
   mkdir $keyring
   chmod -R 700 $keyring
