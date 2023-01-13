@@ -2,7 +2,7 @@
 The collection of `nushell` scripts for GOATs.
 
 > **Note**  
-> see the list of scripts: [SCRIPTS.md]
+> see the list of scripts: [`SCRIPTS.md`](SCRIPTS.md)
 
 ## source the scripts
 in my `nushell` environment configuration file,
