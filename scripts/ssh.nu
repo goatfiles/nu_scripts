@@ -21,3 +21,18 @@ export def "keys ls" [
   } else { $in }
 }
 
+
+# TODO: documentation
+export def export [
+  --dump_dir: string = "/tmp/ssh-keys"
+] {
+  cp -r ($env | get -i SSH_KEYS_HOME | default "~/.ssh/keys/" | path expand) $dump_dir
+}
+
+
+# TODO: documentation
+export def import [
+  --dump_dir: string = "/tmp/ssh-keys"
+] {
+  cp -r $dump_dir ($env | get -i SSH_KEYS_HOME | default "~/.ssh/keys/" | path expand)
+}
