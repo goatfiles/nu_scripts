@@ -109,7 +109,7 @@ export def export [
   pubkeys_file: string = "keys.pub.asc"
   privkeys_file: string = "keys.asc"
   trust_file: string = "trust.txt"
-  --dump_dir: string = "/tmp"
+  --dump_dir: string = "/tmp/gpg-keys"
 ] {
   gpg --armor --export | save --force ($dump_dir | path join $pubkeys_file)
   gpg --armor --export-secret-keys | save --force ($dump_dir | path join $privkeys_file)
@@ -122,7 +122,7 @@ export def import [
   pubkeys_file: string = "keys.pub.asc"
   privkeys_file: string = "keys.asc"
   trust_file: string = "trust.txt"
-  --dump_dir: string = "/tmp"
+  --dump_dir: string = "/tmp/gpg-keys"
 ] {
   gpg --import ($dump_dir | path join $pubkeys_file)
   gpg --import ($dump_dir | path join $privkeys_file)
