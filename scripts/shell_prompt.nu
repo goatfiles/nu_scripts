@@ -171,7 +171,8 @@ def create_right_prompt [
 
     if ($cfg) {
         let cfg_branch = (cfg branch --show-current)
-        $prompt += $"\(cfg: ($cfg_branch)\)"
+        let cfg_commit = (cfg rev-parse --short HEAD)
+        $prompt += $"\(cfg: ($cfg_branch)@($cfg_commit)\)"
     }
 
     $prompt
