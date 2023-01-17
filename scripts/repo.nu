@@ -97,7 +97,7 @@ export def pull [
 export def remove [] {
     let repo = (pick_repo "Please choose a repo to remove: ")
 
-    let path = ($env.GHQ_ROOT | path join $repo)
+    let path = ($env.GIT_REPOS_HOME | path join $repo)
 
     rm --trash --interactive --recursive $path
 }
