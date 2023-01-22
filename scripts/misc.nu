@@ -159,7 +159,7 @@ export def "aoc fetch input" [
 ] {
   let url = $'https://adventofcode.com/2022/day/($day)/input'
 
-  fetch -H (get-aoc-header $login) $url
+  http get -H (get-aoc-header $login) $url
 }
 
 
@@ -170,7 +170,7 @@ export def "aoc fetch answers" [
 ] {
   let url = $'https://adventofcode.com/2022/day/($day)'
 
-  let result = (fetch -H (get-aoc-header $login) $url)
+  let result = (http get -H (get-aoc-header $login) $url)
   let answers = (
     $result
     | lines
