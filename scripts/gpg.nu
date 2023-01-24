@@ -114,8 +114,8 @@ export def export [
   if not ($dump_dir | path exists) {
     mkdir $dump_dir
   }
-  gpg --armor --export | save --force ($dump_dir | path join $pubkeys_file)
-  gpg --armor --export-secret-keys | save --force ($dump_dir | path join $privkeys_file)
+  gpg --armor --export-options backup --export | save --force ($dump_dir | path join $pubkeys_file)
+  gpg --armor --export-options backup --export-secret-keys | save --force ($dump_dir | path join $privkeys_file)
   gpg --export-ownertrust | save --force ($dump_dir | path join $trust_file)
 }
 
