@@ -190,3 +190,30 @@ export def "aoc fetch answers" [
 
 # TODO: docstring
 export def-env back [] { cd - }
+
+
+# TODO: docstring
+export def "get ldd deps" [exec: string] {
+    let bin = (which $exec)
+    if ($bin | is-empty) {
+        print $"could not find ($exec) in PATH..."
+        return
+    }
+
+    ldd ($bin | get path)
+    | lines
+    | parse '{lib} ({addr})'
+    | str trim
+    | update lib {|it|
+        let tokens = ($it.lib | parse "{lib} => {symlink}")
+        if ($tokens | is-empty) {
+            {
+                lib: $it.lib
+                symlink: $nothing
+            }
+        } else {
+            $tokens
+        }
+    }
+    | flatten --all
+}
