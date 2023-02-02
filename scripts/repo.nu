@@ -101,3 +101,21 @@ export def remove [] {
 
     rm --trash --interactive --recursive $path
 }
+
+
+# TODO
+export def "get any" [
+    repo: string
+    --method: string = "https"
+    --host: string = "github.com"
+] {
+    let prefix = if ($method == "ssh") {
+        "ssh://git@"
+    } else {
+        "https://"
+    }
+
+    let upstream = ([$prefix $host "/" $repo ".git"] | str join)
+
+    git clone $upstream ($env.GIT_REPOS_HOME | path join $host $repo)
+}
