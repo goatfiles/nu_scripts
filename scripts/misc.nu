@@ -217,3 +217,36 @@ export def "get ldd deps" [exec: string] {
     }
     | flatten --all
 }
+
+
+# TODO: docstring
+export def "open pdf" [
+    --launcher: string = "okular"
+    --no-swallow: bool
+    --swallower: string = "devour"
+    --from = [~/documents/ ~/downloads/]
+] {
+    let choices = (
+        $from
+        | each {ls $"($in)/**/*.pdf"}
+        | flatten
+        | get name
+        | to text
+    )
+
+    let choice = (
+        $choices
+        | fzf --ansi
+        | str trim
+    )
+    if ($choice | is-empty) {
+        print "user chose to exit..."
+        return
+    }
+
+    if ($no_swallow) {
+        ^$launcher $choice
+    } else {
+        ^$swallower $launcher $choice
+    }
+}
