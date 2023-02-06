@@ -249,3 +249,34 @@ export def "open pdf" [
         ^$swallower $launcher $choice
     }
 }
+
+
+# TODO: docstring
+export def "history stats" [
+    --summary (-s): int = 5
+    --last-cmds (-l): int
+    --verbose (-v): bool
+] {
+    let top_commands = (
+        history
+        | if ($last_cmds != $nothing) { last $last_cmds } else { $in }
+        | get command
+        | split column ' ' command
+        | uniq -c
+        | flatten
+        | sort-by --reverse count
+        | first $summary
+    )
+
+    if ($verbose) {
+        let total_cmds = (history | length)
+        let unique_cmds = (history | get command | uniq | length)
+
+        print $"(ansi green)Total commands in history:(ansi reset) ($total_cmds)"
+        print $"(ansi green)Unique commands:(ansi reset) ($unique_cmds)"
+        print ""
+        print $"(ansi green)Top ($top_commands | length)(ansi reset) most used commands:"
+    }
+
+    $top_commands
+}
