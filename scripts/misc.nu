@@ -20,10 +20,13 @@ export def clip [] {
     #   - xclip on linux
     #   - clip.exe on windows
     #
-    # author: Reilly on
+    # original author: Reilly on
     #   https://discord.com/channels/601130461678272522/615253963645911060/1000921565686415410
     #
-    let input = $in;
+    let input = $in
+    let input = if ($input | describe) == "string" {
+        $input | ansi strip
+    } else { $input }
 
     if not (which clip.exe | is-empty) {
         $input | clip.exe
@@ -31,7 +34,14 @@ export def clip [] {
         $input | xclip -sel clip
     }
 
-    echo "saved to clipboard"
+    print $input
+
+    print --no-newline $"(ansi white_italic)(ansi white_dimmed)saved to clipboard"
+    if ($input | describe) == "string" {
+        print " (stripped)"
+    }
+    print --no-newline $"(ansi reset)"
+
     dunstify "nushell.lib.misc.clip" "saved to clipboard"
 }
 
