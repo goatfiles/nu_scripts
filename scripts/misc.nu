@@ -262,6 +262,8 @@ export def "open pdf" [
 
 
 # TODO: docstring
+# credit to @fdncred
+# https://discord.com/channels/601130461678272522/615253963645911060/1071893062864863293
 export def "history stats" [
     --summary (-s): int = 5
     --last-cmds (-l): int
@@ -293,6 +295,8 @@ export def "history stats" [
 
 
 # TODO
+# credit to @fdncred
+# https://discord.com/channels/601130461678272522/615253963645911060/1072286261873741854
 def "history search" [
     str: string = '' # search string
     --cwd(-c) # Filter search result by directory
