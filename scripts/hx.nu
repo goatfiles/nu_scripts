@@ -50,10 +50,11 @@ export def "get lsp" [
 
   let lsp = (
     $languages
-    | each {|language id|
+    | enumerate
+    | each {|language|
       if ($progress) {
         print -n $"(ansi erase_line)"
-        print -n $"loading language support [($id + 1) / ($languages | length)]: ($language)\r"
+        print -n $"loading language support [($language.index + 1) / ($languages | length)]: ($language.item)\r"
       }
 
       {language: $language.item} |

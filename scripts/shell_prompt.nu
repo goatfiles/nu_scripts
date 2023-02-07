@@ -17,11 +17,12 @@ def spwd [] {
   let spwd_len = (($spwd_paths | length) - 1)
 
   $spwd_paths
-  | each {|el id|
-    let spwd_src = ($el | split chars)
+  | enumerate
+  | each {|el|
+    let spwd_src = ($el.item | split chars)
 
-    if ($id == $spwd_len) {
-      $el
+    if ($el.index == $spwd_len) {
+      $el.item
     } else if ($spwd_src.0 == ".") {
       $".($spwd_src.1)"
     } else {
