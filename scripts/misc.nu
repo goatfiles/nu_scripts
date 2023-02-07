@@ -290,3 +290,21 @@ export def "history stats" [
 
     $top_commands
 }
+
+
+# TODO
+def "history search" [
+    str: string = '' # search string
+    --cwd(-c) # Filter search result by directory
+    --exit(-e): int = 0 # Filter search result by exit code
+    --before(-b): datetime = 2100-01-01 #  Only include results added before this date
+    --after(-a): datetime = 1970-01-01 # Only include results after this date
+    --limit(-l): int = 25# How many entries to return at most
+] {
+    history
+    | where start_timestamp != ""
+    | update start_timestamp {|r| $r.start_timestamp | into datetime}
+    | where command =~ $str and exit_status == $exit and start_timestamp > $after and start_timestamp < $before
+    | if $cwd { where cwd == $env.PWD } else { $in }
+    | first $limit
+}
