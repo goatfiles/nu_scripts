@@ -299,7 +299,7 @@ export def "history stats" [
 # TODO
 # credit to @fdncred
 # https://discord.com/channels/601130461678272522/615253963645911060/1072286261873741854
-def "history search" [
+export def "history search" [
     str: string = '' # search string
     --cwd(-c) # Filter search result by directory
     --exit(-e): int = 0 # Filter search result by exit code
