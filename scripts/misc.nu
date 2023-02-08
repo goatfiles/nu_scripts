@@ -17,7 +17,7 @@ export def clip [] {
     # the function is cross-platform and will work on windows.
     #
     # dependencies:
-    #   - xclip on linux
+    #   - xclip on linux x11
     #   - clip.exe on windows
     #
     # original author: Reilly on
