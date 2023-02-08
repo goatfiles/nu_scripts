@@ -42,7 +42,9 @@ export def clip [] {
     }
     print --no-newline $"(ansi reset)"
 
-    dunstify "nushell.lib.misc.clip" "saved to clipboard"
+    if ($nu.os-info.name == linux) {
+        notify-send "nushell.lib.misc.clip" "saved to clipboard"
+    }
 }
 
 
