@@ -30,8 +30,10 @@ export def clip [] {
 
     if not (which clip.exe | is-empty) {
         $input | clip.exe
-    } else {
+    } else if ($env | get -i WAYLAND_DISPLAY | is-empty) {
         $input | xclip -sel clip
+    } else {
+        $input | wl-copy
     }
 
     print $input
