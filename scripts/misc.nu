@@ -316,3 +316,22 @@ export def "history search" [
     | if $cwd { where cwd == $env.PWD } else { $in }
     | first $limit
 }
+
+
+# TODO: docstring
+export def "get wallpapers" [
+  nb_wallpapers: int
+  --shuffle (-s): bool
+] {
+    [
+        /usr/share/backgrounds
+        ($env.GIT_REPOS_HOME | path join "github.com/goatfiles/wallpapers/wallpapers")
+    ]
+    | each {
+        let glob_path = ($in | path join "*")
+        glob --no-dir $glob_path
+    }
+    | flatten
+    | if ($shuffle) { shuffle } else { $in }
+    | take $nb_wallpapers
+}
