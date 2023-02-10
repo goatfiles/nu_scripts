@@ -336,7 +336,6 @@ export def "get wallpapers" [
     | take $nb_wallpapers
 }
 
-
 # TODO: docstring
 export def "repo get" [
     repo: string
@@ -351,4 +350,35 @@ export def "repo get" [
     if not ($revision | is-empty) {
         git -C $local checkout $revision
     }
+}
+
+
+# TODO: docstring
+def list-repos [] {
+    ^find $env.GIT_REPOS_HOME -type d -name .git
+    | lines
+    | str replace $"($env.GIT_REPOS_HOME)/" ""
+    | str replace "/.git$" ""
+    | sort --ignore-case
+}
+
+
+# TODO: docstring
+export def-env "repo enter" [] {
+    let choice = (
+        list-repos
+        | to text
+        | fzf --ansi --prompt "Please choose a repo to enter: "
+        | str trim
+    )
+
+    if ($choice | is-empty) {
+        print "user choose to exit..."
+        return
+    }
+
+    enter ($env.GIT_REPOS_HOME | path join $choice)
+
+    print "Opened shells:"
+    shells
 }
