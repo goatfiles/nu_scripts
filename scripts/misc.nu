@@ -335,3 +335,20 @@ export def "get wallpapers" [
     | if ($shuffle) { shuffle } else { $in }
     | take $nb_wallpapers
 }
+
+
+# TODO: docstring
+export def "repo get" [
+    repo: string
+    --host: string = "github.com"
+    --revision: string
+] {
+    let upstream = ([$env.GIT_PROTOCOL.protocol $host] | str join | path join $repo)
+    let local = ($env.GIT_REPOS_HOME | path join $host $repo)
+
+    git clone $upstream $local
+
+    if not ($revision | is-empty) {
+        git -C $local checkout $revision
+    }
+}
