@@ -162,6 +162,7 @@ def create_right_prompt [
   --cfg: bool
 ] {
     mut prompt = ""
+
     if ($time) {
         let time_segment = ([
             (date now | date format '%m/%d/%Y %r')
@@ -173,10 +174,11 @@ def create_right_prompt [
     if ($cfg) {
         let cfg_branch = (cfg branch --show-current)
         let cfg_commit = (cfg rev-parse --short HEAD)
+        $prompt += " "
         $prompt += $"\(cfg: ($cfg_branch)@($cfg_commit)\)"
     }
 
-    $prompt
+    $prompt | str trim
 }
 
 
