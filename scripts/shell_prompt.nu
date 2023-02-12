@@ -159,6 +159,8 @@ def create_left_prompt_eldyj [] {
 # TODO: documentation
 def create_right_prompt [
   --time: bool
+  --cwd: bool
+  --repo: bool
   --cfg: bool
 ] {
     mut prompt = ""
@@ -169,6 +171,19 @@ def create_right_prompt [
         ] | str collect)
 
         $prompt += $time_segment
+    }
+
+    if ($cwd) {
+        $prompt += " "
+        $prompt += (spwd)
+    }
+
+    if ($repo) {
+        if ((do -i { git branch --show-current } | complete | get stderr) == "") {
+            let repo_branch = (git branch --show-current)
+            let repo_commit = (git rev-parse --short HEAD)
+            $prompt += $": ($repo_branch)@($repo_commit)"
+        }
     }
 
     if ($cfg) {
