@@ -210,7 +210,7 @@ export def-env setup [
   }
 
   let-env PROMPT_COMMAND_RIGHT = if ($use_right_prompt) {
-    {create_right_prompt --cfg}
+    {create_right_prompt --cwd --repo --cfg}
   } else {
     ""
   }
