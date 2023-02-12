@@ -199,11 +199,14 @@ def create_right_prompt [
 
 # TODO: documentation
 export def-env setup [
+    --no-left-prompt: bool
     --use-eldyj-prompt: bool
     --use-right-prompt: bool
     --indicators = {}
 ] {
-  let-env PROMPT_COMMAND = if ($use_eldyj_prompt) {
+  let-env PROMPT_COMMAND = if ($no_left_prompt) {
+    { "" }
+  } else if ($use_eldyj_prompt) {
     {create_left_prompt_eldyj}
   } else {
     {create_left_prompt}
