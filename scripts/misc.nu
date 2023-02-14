@@ -382,3 +382,9 @@ export def-env "repo enter" [] {
     print "Opened shells:"
     shells
 }
+
+
+# TODO: docstring
+export def "glow wide" [file: string] {
+    ^glow --pager --width (term size | get columns) $file
+}
