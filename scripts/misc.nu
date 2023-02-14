@@ -355,7 +355,7 @@ export def "repo get" [
 
 # TODO: docstring
 def list-repos [] {
-    ^find $env.GIT_REPOS_HOME -type d -name .git
+    ghq list
     | lines
     | str replace $"($env.GIT_REPOS_HOME)/" ""
     | str replace "/.git$" ""
