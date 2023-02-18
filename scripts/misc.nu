@@ -407,3 +407,19 @@ export def "youtube share" [url: string] {
     | update date {|it| $it.date | into datetime}
     | update url {|it| $it.url | str replace --string "www.youtube.com/embed" "youtu.be"}
 }
+
+
+# TODO: docstring
+export def "list todos" [] {
+    rg "//.? ?TODO" . -n
+    | lines
+    | parse "{file}:{line}:{match}"
+    | try {
+        group-by file
+        | transpose
+        | reject column1.file
+        | transpose -rid
+    } catch {
+        "no TODOs found in this directory"
+    }
+}
