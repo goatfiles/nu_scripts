@@ -250,7 +250,7 @@ export def "open pdf" [
     )
 
     let choice = (
-        $choices | prompt fzf_ask "What PDF to open? "
+        $choices | prompt fzf_ask "What PDF to open? " "pdftotext {} /dev/stdout"
     )
     if ($choice | is-empty) {
         print "user chose to exit..."
