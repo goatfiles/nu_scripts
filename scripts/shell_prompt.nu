@@ -156,6 +156,14 @@ def create_left_prompt_eldyj [] {
 }
 
 
+def color [
+    text: string
+    color: string
+] {
+    [(ansi $color) $text (ansi reset)] | str join
+}
+
+
 # TODO: documentation
 def create_right_prompt [
   --time: bool
@@ -170,19 +178,26 @@ def create_right_prompt [
             (date now | date format '%m/%d/%Y %r')
         ] | str collect)
 
-        $prompt += $time_segment
+        $prompt += (color $time_segment red)
     }
 
     if ($cwd) {
         $prompt += " "
-        $prompt += (spwd)
+        $prompt += (color (spwd) green)
     }
 
     if ($repo) {
         if ((do -i { git branch --show-current } | complete | get stderr) == "") {
             let repo_branch = (git branch --show-current)
             let repo_commit = (git rev-parse --short HEAD)
-            $prompt += $": ($repo_branch)@($repo_commit)"
+            $prompt += ([[text color];
+                [': ' 'white_dimmed']
+                [$repo_branch 'yellow']
+                ['@' 'white_dimmed']
+                [$repo_commit 'yellow_bold']
+            ]
+            | each {|it| color $it.text $it.color}
+            | str join)
         }
     }
 
@@ -190,7 +205,15 @@ def create_right_prompt [
         let cfg_branch = (cfg branch --show-current)
         let cfg_commit = (cfg rev-parse --short HEAD)
         $prompt += " "
-        $prompt += $"\(cfg: ($cfg_branch)@($cfg_commit)\)"
+        $prompt += ([[text color];
+            ['(cfg: ' 'white_dimmed']
+            [$cfg_branch 'red']
+            ['@' 'white_dimmed']
+            [$cfg_commit 'red_bold']
+            [')' 'white_dimmed']
+         ]
+         | each {|it| color $it.text $it.color}
+         | str join)
     }
 
     $prompt | str trim
