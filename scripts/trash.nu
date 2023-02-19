@@ -47,6 +47,12 @@ export def restore [name: string] {
 
 
 # TODO: docstring
+export def size [] {
+  du ($env.XDG_DATA_HOME | path join Trash) | try { get physical.0 } catch { 0B }
+}
+
+
+# TODO: docstring
 export def empty [] {
   rm --permanent -rf ($env.XDG_DATA_HOME | path join Trash)
 }
