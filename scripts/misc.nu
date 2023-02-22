@@ -307,7 +307,7 @@ export def "history search" [
     --exit(-e): int = 0 # Filter search result by exit code
     --before(-b): datetime = 2100-01-01 #  Only include results added before this date
     --after(-a): datetime = 1970-01-01 # Only include results after this date
-    --limit(-l): int = 25# How many entries to return at most
+    --limit(-l): int = 25 # How many entries to return at most
 ] {
     history
     | where start_timestamp != ""
