@@ -423,3 +423,11 @@ export def "list todos" [] {
         "no TODOs found in this directory"
     }
 }
+
+
+# TODO: docstring
+export def "git get commit" [
+    revision: string = "HEAD"
+] {
+    git rev-parse $revision | str trim
+}
