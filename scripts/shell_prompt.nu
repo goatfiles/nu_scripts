@@ -163,6 +163,11 @@ def color [
     [(ansi $color) $text (ansi reset)] | str join
 }
 
+def build_colored_string [separator: string = " "] {
+    each {|it| color $it.text $it.color}
+    | str join $separator
+}
+
 
 # TODO: documentation
 def create_right_prompt [
@@ -191,13 +196,12 @@ def create_right_prompt [
             let repo_branch = (git branch --show-current)
             let repo_commit = (git rev-parse --short HEAD)
             $prompt += ([[text color];
-                [': ' 'white_dimmed']
+                [':' 'white_dimmed']
                 [$repo_branch 'yellow']
                 ['@' 'white_dimmed']
                 [$repo_commit 'yellow_bold']
             ]
-            | each {|it| color $it.text $it.color}
-            | str join)
+            | build_colored_string)
         }
     }
 
@@ -206,14 +210,13 @@ def create_right_prompt [
         let cfg_commit = (cfg rev-parse --short HEAD)
         $prompt += " "
         $prompt += ([[text color];
-            ['(cfg: ' 'white_dimmed']
+            ['(cfg:' 'white_dimmed']
             [$cfg_branch 'red']
             ['@' 'white_dimmed']
             [$cfg_commit 'red_bold']
             [')' 'white_dimmed']
          ]
-         | each {|it| color $it.text $it.color}
-         | str join)
+         | build_colored_string)
     }
 
     $prompt | str trim
