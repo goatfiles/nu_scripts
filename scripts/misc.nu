@@ -431,3 +431,21 @@ export def "git get commit" [
 ] {
     git rev-parse $revision | str trim
 }
+
+
+# TODO: docstring
+export def "git compare" [
+    with: string
+    from: string = "HEAD"
+    --share: bool
+] {
+    let start = (git rev-parse $with | str trim)
+    let end = (git rev-parse $from | str trim)
+
+    if $share {
+        return $"[`($start)`..`($end)`]\(($start)..($end)\)"
+    }
+
+    print $"comparing ($start) ($with) and ($end) ($from)"
+    git diff $start $end
+}
