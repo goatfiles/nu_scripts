@@ -13,7 +13,7 @@ use scripts/prompt.nu
 
 alias GIT = ^git --git-dir $env.DOTFILES_GIT_DIR --work-tree $env.DOTFILES_WORKTREE
 
-alias FZF_EDIT_PREVIEW = "bat $HOME/{} --color always"
+def FZF_EDIT_PREVIEW [] { "bat $HOME/{} --color always" }
 
 # TODO
 export def-env edit [] {

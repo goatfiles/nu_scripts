@@ -14,26 +14,26 @@ use scripts/context.nu
 
 alias FZF = fzf --ansi --color --reverse
 
-alias FZF_LOG_PREVIEW = "
-hash=$(echo {} | \\
-  sd -s '|' '' | \\
-  sd -s '\\' '' | \\
-  sd -s '/' '' | \\
-  sd '^\\s*\\*\\s*' '' | \\
-  awk '{print $1}'\\
-)
-[ -z $hash ] || git show --color=always $hash
-"
-alias FZF_STASH_PREVIEW = "git stash show --all --color=always $(echo {1} | sd ':' '')"
+def FZF_LOG_PREVIEW [] {"
+    hash=$(echo {} | \\
+      sd -s '|' '' | \\
+      sd -s '\\' '' | \\
+      sd -s '/' '' | \\
+      sd '^\\s*\\*\\s*' '' | \\
+      awk '{print $1}'\\
+    )
+    [ -z $hash ] || git show --color=always $hash
+"}
+def FZF_STASH_PREVIEW [] { "git stash show --all --color=always $(echo {1} | sd ':' '')" }
 
-alias FZF_CHECKOUT_PREVIEW = "
-branch=$(echo {} | \\
-  sd -s '*' '' | \\
-  sd '^\\s*' '' | \\
-  sd ' .*' '' \\
-)
-git log --graph --decorate --oneline --color=always $branch
-"
+def FZF_CHECKOUT_PREVIEW [] {"
+    branch=$(echo {} | \\
+      sd -s '*' '' | \\
+      sd '^\\s*' '' | \\
+      sd ' .*' '' \\
+    )
+    git log --graph --decorate --oneline --color=always $branch
+"}
 
 # TODO
 def log_error [message: string] {
