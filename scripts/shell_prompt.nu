@@ -206,8 +206,8 @@ def create_right_prompt [
     }
 
     if ($cfg) {
-        let cfg_branch = (cfg branch --show-current)
-        let cfg_commit = (cfg rev-parse --short HEAD)
+        let cfg_branch = (cfg branch --show-current | str trim)
+        let cfg_commit = (cfg rev-parse --short HEAD | str trim)
         $prompt += " "
         $prompt += ([[text color];
             ['(cfg:' 'white_dimmed']
