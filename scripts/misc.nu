@@ -463,3 +463,19 @@ export def "cargo list" [] {
     | update bins {|it| $it.bins | str replace '\s+' ' ' | split row ' '}
     | update path {|it| $it.path | str replace --string '(' '' | str replace --string ')' ''}
 }
+
+
+# TODO: docstring
+export def "watch cpu" [nb_loops = -1] {
+    let name = $in
+
+    mut i = 0
+    loop {
+        ps | where name == $name | try { math sum | get cpu }
+
+        $i += 1
+        if ($nb_loops > 0) and ($i >= $nb_loops) {
+            break
+        }
+    }
+}
