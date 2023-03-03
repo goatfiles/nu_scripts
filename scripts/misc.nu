@@ -479,3 +479,25 @@ export def "watch cpu" [nb_loops = -1] {
         }
     }
 }
+
+
+# TODO: docstring
+export def "cargo info full" [
+    crate: string
+] {
+    cargo info $crate
+    | lines
+    | parse "{key}: {value}"
+    | str trim
+    | transpose -r
+    | into record
+    | merge ({
+        versions: (
+            cargo info $crate -VV
+            | lines -s
+            | skip 1
+            | parse --regex '(?<version>\d+\.\d+\.\d+)\s+(?<released>.* ago)\s+(?<downloads>\d+)'
+            | into int downloads
+        )
+    })
+}
