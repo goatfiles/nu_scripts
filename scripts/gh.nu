@@ -68,3 +68,17 @@ export def "me protection" [
 ] {
     pull (["" "repos" $owner $repo "branches" $branch "protection"] | str collect "/")
 }
+
+
+# TODO: documentation
+# from @fdncred at
+# https://discord.com/channels/601130461678272522/615253963645911060/1081587274048868443
+export def down [
+    project: string
+] {
+    http get (["https://api.github.com/repos" $project "releases"] | path join) |
+    get assets |
+    flatten |
+    select name download_count created_at |
+    update created_at {|r| $r.created_at | into datetime | date format '%m/%d/%Y %H:%M:%S'}
+}
