@@ -86,20 +86,6 @@ export def-env br [args = "."] {
 
 
 # TODO
-export def match [
-    input:string
-    matchers:record
-    default?: block
-] {
-    if (($matchers | get -i $input) != null) {
-         $matchers | get $input | do $in
-    } else if ($default != null) {
-        do $default
-    }
-}
-
-
-# TODO
 # credit to @Eldyj
 # https://discord.com/channels/601130461678272522/614593951969574961/1039518281108815942
 def mvr [
