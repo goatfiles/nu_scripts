@@ -501,3 +501,30 @@ export def "cargo info full" [
         )
     })
 }
+
+
+# TODO: docstring
+def "qutebrowser open" [session: string = ""] {
+    let session = if ($session | is-empty) {
+        let sessions = (
+            ls ($env.XDG_DATA_HOME | path join "qutebrowser" "sessions")
+            | get name
+            | path parse
+            | where extension == "yml"
+            | get stem
+        )
+
+        $sessions
+        | to text
+        | fzf
+        | str trim
+    } else {
+        $session
+    }
+
+    if ($session | is-empty) {
+        return
+    }
+
+    qutebrowser $":session-load ($session)" --target window
+}
