@@ -11,9 +11,14 @@ export def-env go [] {
 
 
 # TODO: documentation
-export def clean [] {
+export def clean [--force (-f): bool] {
   if (show | length) > 0 {
-    rm --trash --interactive ($env.DOWNLOADS_DIR | path join *)
+    let files = ($env.DOWNLOADS_DIR | path join *)
+    if $force {
+      rm --trash $files
+    } else {
+      rm --trash --interactive $files
+    }
   } else {
     print $"no files in ($env.DOWNLOADS_DIR)..."
   }
