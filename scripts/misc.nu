@@ -510,18 +510,19 @@ export def "cargo info full" [
 }
 
 
-# TODO: docstring
-def "qutebrowser open" [session: string = ""] {
-    let session = if ($session | is-empty) {
-        let sessions = (
-            ls ($env.XDG_DATA_HOME | path join "qutebrowser" "sessions")
-            | get name
-            | path parse
-            | where extension == "yml"
-            | get stem
-        )
+def "qutebrowser list sessions" [] {
+    ls ($env.XDG_DATA_HOME | path join "qutebrowser" "sessions")
+    | get name
+    | path parse
+    | where extension == "yml"
+    | get stem
+}
 
-        $sessions
+
+# TODO: docstring
+export def "qutebrowser open" [session: string = ""] {
+    let session = if ($session | is-empty) {
+        qutebrowser list sessions
         | to text
         | fzf
         | str trim
@@ -534,4 +535,39 @@ def "qutebrowser open" [session: string = ""] {
     }
 
     qutebrowser $":session-load ($session)" --target window
+}
+
+
+# TODO: docstring
+export def "qutebrowser import" [] {
+    let session = $in
+
+    $session
+    | open --raw
+    | save --force ($env.XDG_DATA_HOME
+    | path join "qutebrowser" "sessions" $session)
+}
+
+
+# TODO: docstring
+export def "qutebrowser export" [session: string = ""] {
+    let session = if ($session | is-empty) {
+        qutebrowser list sessions
+        | to text
+        | fzf
+        | str trim
+    } else {
+        $session
+    }
+
+    if ($session | is-empty) {
+        return
+    }
+
+    $env.XDG_DATA_HOME
+    | path join "qutebrowser" "sessions" $session
+    | path parse
+    | update extension yml
+    | path join
+    | open --raw
 }
