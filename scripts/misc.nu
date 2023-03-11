@@ -405,7 +405,14 @@ export def "youtube share" [url: string] {
     | rename url date author length title
     | update length {|it| [$it.length "sec"] | str join | into duration}  # udpate some of the fields for clarity
     | update date {|it| $it.date | into datetime}
-    | update url {|it| $it.url | str replace --string "www.youtube.com/embed" "youtu.be"}
+    | update url {|it|
+        $it.url
+        | url parse
+        | reject query params
+        | update path {|it| $it.path | str replace "/embed/" ""}
+        | update host youtu.be
+        | url join
+    }
 }
 
 
