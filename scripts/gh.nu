@@ -82,3 +82,55 @@ export def down [
     select name download_count created_at |
     update created_at {|r| $r.created_at | into datetime | date format '%m/%d/%Y %H:%M:%S'}
 }
+
+
+# TODO: documentation
+export def "me pr" [] {
+    let repo = (
+        gh repo view --json nameWithOwner
+        | from json
+        | try { get nameWithOwner } catch { return }
+    )
+
+    print $"pulling list of PRs for ($repo)..."
+    let prs = (
+        gh pr list --json title,author,number,createdAt,isDraft,body
+        | from json
+        | select number title author.login createdAt isDraft body
+        | rename id title author date draft body
+        | into datetime date
+        | sort-by date --reverse
+    )
+
+    if ($prs | is-empty) {
+        print $"no PR found for project ($repo)!"
+        return
+    }
+
+    let choice = (
+        $prs
+        | each {|pr|
+            [
+                $pr.id
+                $pr.title
+                $pr.author
+                $pr.date
+                $pr.draft
+                # ($pr.body | str replace --all '\n' "")
+            ]
+            | str join " - "
+        }
+        | to text
+        | fzf
+        | str trim
+        | split column " - " id title author date draft
+        | get 0
+    )
+
+    if ($choice | is-empty) {
+        return
+    }
+
+    print $"checking out onto PR ($choice.id) from ($choice.author)..."
+    gh pr checkout $choice.id
+}
