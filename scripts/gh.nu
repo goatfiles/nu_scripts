@@ -28,6 +28,17 @@ def pull [
 # TODO: documentation
 export def "me notifications" [] {
     pull /notifications
+    | select reason subject.title subject.url
+    | rename reason title url
+    | update url {|notification|
+        $notification | get url | url parse
+        | update host "github.com"
+        | update path {|it|
+            $it.path | str replace "/repos/" "" | str replace "pulls" "pull"
+        }
+        | reject params
+        | url join
+    }
 }
 
 
