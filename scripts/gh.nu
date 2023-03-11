@@ -94,7 +94,7 @@ export def "me pr" [] {
 
     print $"pulling list of PRs for ($repo)..."
     let prs = (
-        gh pr list --json title,author,number,createdAt,isDraft,body
+        gh pr list --json title,author,number,createdAt,isDraft,body --limit 1000000000
         | from json
         | select number title author.login createdAt isDraft body
         | rename id title author date draft body
