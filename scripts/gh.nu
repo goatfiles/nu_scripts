@@ -85,7 +85,10 @@ export def down [
 
 
 # TODO: documentation
-export def "me pr" [number?: int] {
+export def "me pr" [
+    number?: int
+    --open-in-browser (-o): bool
+] {
     let repo = (
         gh repo view --json nameWithOwner
         | from json
@@ -93,16 +96,24 @@ export def "me pr" [number?: int] {
     )
 
     if not ($number | is-empty) {
-        gh pr checkout $number
+        if $open_in_browser {
+            xdg-open ({
+                scheme: "https"
+                host: "github.com"
+                path: ($repo | path join "pull" ($number | into string))
+            } | url join)
+        } else {
+            gh pr checkout $number
+        }
         return
     }
 
     print $"pulling list of PRs for ($repo)..."
     let prs = (
-        gh pr list --json title,author,number,createdAt,isDraft,body --limit 1000000000
+        gh pr list --json title,author,number,createdAt,isDraft,body,url --limit 1000000000
         | from json
-        | select number title author.login createdAt isDraft body
-        | rename id title author date draft body
+        | select number title author.login createdAt isDraft body url
+        | rename id title author date draft body url
         | into datetime date
         | sort-by date --reverse
     )
@@ -122,17 +133,23 @@ export def "me pr" [number?: int] {
                 $pr.date
                 $pr.draft
                 # ($pr.body | str replace --all '\n' "")
+                $pr.url
             ]
             | str join " - "
         }
         | to text
         | fzf
         | str trim
-        | split column " - " id title author date draft
+        | split column " - " id title author date draft url
         | get 0
     )
 
     if ($choice | is-empty) {
+        return
+    }
+
+    if $open_in_browser {
+        xdg-open $choice.url
         return
     }
 
