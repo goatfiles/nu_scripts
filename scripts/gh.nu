@@ -85,12 +85,17 @@ export def down [
 
 
 # TODO: documentation
-export def "me pr" [] {
+export def "me pr" [number?: int] {
     let repo = (
         gh repo view --json nameWithOwner
         | from json
         | try { get nameWithOwner } catch { return }
     )
+
+    if not ($number | is-empty) {
+        gh pr checkout $number
+        return
+    }
 
     print $"pulling list of PRs for ($repo)..."
     let prs = (
