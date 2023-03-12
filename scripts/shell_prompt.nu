@@ -4,32 +4,29 @@
 # https://discord.com/channels/601130461678272522/615253963645911060/1037327061481701468
 # revised by @fdncred in
 # https://discord.com/channels/601130461678272522/615253963645911060/1037354164147200050
+#
+# i've fixed a bug when outside `$env.HOME` and refactored the source to use `str`
+# subcommands
 def spwd [] {
-  let home = (if ($nu.os-info.name == windows) { $env.USERPROFILE } else { $env.HOME })
-  let sep = (if ($nu.os-info.name == windows) { "\\" } else { "/" })
+    let sep = if ($nu.os-info.name == windows) { "\\" } else { "/" }
 
-  let spwd_paths = (
-    $"!/($env.PWD)" |
-      str replace $"!/($home)" ~ -s |
-      split row $sep
-  )
+    let tokens = (
+        ["!" $env.PWD] | str join
+        | str replace (["!" $env.HOME] | str join) "~"
+        | split row $sep
+    )
 
-  let spwd_len = (($spwd_paths | length) - 1)
-
-  $spwd_paths
-  | enumerate
-  | each {|el|
-    let spwd_src = ($el.item | split chars)
-
-    if ($el.index == $spwd_len) {
-      $el.item
-    } else if ($spwd_src.0 == ".") {
-      $".($spwd_src.1)"
-    } else {
-      $"($spwd_src.0)"
+    $tokens
+    | enumerate
+    | each {|it|
+        $it.item
+        | if ($it.index != (($tokens | length) - 1)) {
+            str substring (
+                if ($it.item | str starts-with '.') { 0..2 } else { 0..1 }
+            )
+        } else { $it.item }
     }
-  }
-  | str collect $sep
+    | path join
 }
 
 
