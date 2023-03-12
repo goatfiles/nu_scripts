@@ -7,12 +7,10 @@
 #
 # i've fixed a bug when outside `$env.HOME` and refactored the source to use `str`
 # subcommands
-def spwd [] {
-    let sep = if ($nu.os-info.name == windows) { "\\" } else { "/" }
-
+def spwd [sep: string = $"(char path_sep)"] {
     let tokens = (
         ["!" $env.PWD] | str join
-        | str replace (["!" $env.HOME] | str join) "~"
+        | str replace (["!" $nu.home-path] | str join) "~"
         | split row $sep
     )
 
