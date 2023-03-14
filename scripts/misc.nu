@@ -571,3 +571,9 @@ export def "qutebrowser export" [session: string = ""] {
     | path join
     | open --raw
 }
+
+
+# TODO: docstring
+export def "into hex" [] {
+    fmt | get lowerhex
+}
