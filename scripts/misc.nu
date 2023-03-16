@@ -577,3 +577,13 @@ export def "qutebrowser export" [session: string = ""] {
 export def "into hex" [] {
     fmt | get lowerhex
 }
+
+
+# TODO: docstring
+export def "git lock clean" [] {
+    try {
+        rm --verbose (git rev-parse --show-toplevel | str trim | path join ".git" "index.lock")
+    } catch {
+        print "the index is not busy for now."
+    }
+}
