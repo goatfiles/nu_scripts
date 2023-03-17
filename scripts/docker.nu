@@ -29,14 +29,14 @@ export def prune [
     print $"(ansi red)docker image rm(ansi reset):"
     docker image ls -aq
     | lines
-    | each {docker image rm --force $in}
+    | each {|| docker image rm --force $in}
   }
 
   if ($processes or $all) {
     print $"(ansi red)docker rm(ansi reset):"
     docker ps -aq
     | lines
-    | each {docker rm --force $in}
+    | each {|| docker rm --force $in}
   }
 }
 

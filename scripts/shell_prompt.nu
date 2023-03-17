@@ -226,15 +226,15 @@ export def-env setup [
     --indicators = {}
 ] {
   let-env PROMPT_COMMAND = if ($no_left_prompt) {
-    { "" }
+    ""
   } else if ($use_eldyj_prompt) {
-    {create_left_prompt_eldyj}
+    {|| create_left_prompt_eldyj}
   } else {
-    {create_left_prompt}
+    {|| create_left_prompt}
   }
 
   let-env PROMPT_COMMAND_RIGHT = if ($use_right_prompt) {
-    {create_right_prompt --cwd --repo --cfg}
+    {|| create_right_prompt --cwd --repo --cfg}
   } else {
     ""
   }

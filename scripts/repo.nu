@@ -11,7 +11,7 @@
 
 use scripts/prompt.nu
 
-def FZF_PICK_PREVIEW [] {"
+def FZF_PICK_PREVIEW [] { return "
     path=$(ghq root)/$(echo {} | sed 's/: /.com\\//')
     echo "TREE:"
     git -C $path --no-pager log --graph --branches --remotes --tags --oneline --decorate --simplify-by-decoration -n 10 --color=always

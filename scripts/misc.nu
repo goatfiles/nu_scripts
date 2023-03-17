@@ -243,7 +243,7 @@ export def "open pdf" [
 ] {
     let choices = (
         $from
-        | each {ls $"($in)/**/*.pdf"}
+        | each {|| ls $"($in)/**/*.pdf"}
         | flatten
         | get name
         | to text
@@ -327,7 +327,7 @@ export def "get wallpapers" [
         /usr/share/backgrounds
         ($env.GIT_REPOS_HOME | path join "github.com/goatfiles/wallpapers/wallpapers")
     ]
-    | each {
+    | each {||
         let glob_path = ($in | path join "*")
         glob --no-dir $glob_path
     }
