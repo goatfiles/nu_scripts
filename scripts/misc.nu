@@ -587,3 +587,9 @@ export def "git lock clean" [] {
         print "the index is not busy for now."
     }
 }
+
+
+# TODO: docstring
+export def-env "git root" [] {
+    cd (git rev-parse --show-toplevel | str trim)
+}
