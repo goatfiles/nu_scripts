@@ -593,3 +593,39 @@ export def "git lock clean" [] {
 export def-env "git root" [] {
     cd (git rev-parse --show-toplevel | str trim)
 }
+
+
+# TODO: docstring
+export def "git branches" [
+    --report: bool
+    --clean: bool
+] {
+    let local_branches = (git branch --list | lines | str replace '..' "")
+    let remote_branches = (git branch -r | lines | str trim | find --invert "HEAD ->" | parse "{remote}/{branch}")
+
+    let branches_report = (
+        $local_branches | each {|branch|
+            {
+                branch: $branch
+                remotes: ($remote_branches | where branch == $branch | get remote)
+            }
+        }
+    )
+
+    if $report {
+        return $branches_report
+    }
+
+    let dangling_branches = ($branches_report | where remotes == [] | get branch)
+
+    if ($dangling_branches | length) == 0 {
+        print "no dangling branch"
+        return
+    }
+
+    if $clean {
+        $dangling_branches | each {|| git branch --delete --force $in}
+    } else {
+        $dangling_branches
+    }
+}
