@@ -188,8 +188,8 @@ def create_right_prompt [
 
     if ($repo) {
         if ((do -i { git branch --show-current } | complete | get stderr) == "") {
-            let repo_branch = (git branch --show-current)
-            let repo_commit = (git rev-parse --short HEAD)
+            let repo_branch = (git branch --show-current | str trim)
+            let repo_commit = (git rev-parse --short HEAD | str trim)
             $prompt += ([[text color];
                 [':' 'white_dimmed']
                 [$repo_branch 'yellow']
