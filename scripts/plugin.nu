@@ -3,7 +3,7 @@ export def export [] {
     | lines
     | str replace '^register (.*) \s+{' '{"binary": "$1",'
     | split list ""
-    | each { to text | from json | update binary { get binary | path parse | get stem } }
+    | each {|| to text | from json | update binary {|| get binary | path parse | get stem } }
 }
 
 export def import [] {
