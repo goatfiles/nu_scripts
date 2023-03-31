@@ -640,3 +640,45 @@ export def "git branches" [
         $dangling_branches
     }
 }
+
+# Execute conditional pipelines depending on the previous command output.
+#
+# see https://discord.com/channels/601130461678272522/615253963645911060/1086437351598870689
+#
+# Examples:
+#     >_ 1 == 1 | pipeif true | "OMG 1 is equal to 1"
+#     OMG 1 is equal to 1
+#
+#     >_ 1 != 1 | pipeif true | "This message will never be printed"
+#     Error:
+#       × Breaking pipeline: conditional execution aborted
+#
+#     >_ [7 3 4 9] | find 7 3 | pipeif [7 3] | "Found numbers 7 and 3"
+#     Found numbers 7 and 3
+#
+#     >_ [7 3 4 9] | find 3 5 | pipeif [3 5] | "This message will never be printed"
+#     Error:
+#       × Breaking pipeline: conditional execution aborted
+export def pipeif [
+    expected: any  # Expected value to not break the pipeline
+    --invert (-v): bool
+] {
+    let value = $in
+
+    print $value
+    print $expected
+
+    let condition = (if $invert {
+        ($value | sort) == ($expected | sort)
+    } else {
+        ($value | sort) != ($expected | sort)
+    })
+
+    if $condition {
+        error make --unspanned {
+            msg: "Breaking pipeline: conditional execution aborted"
+        }
+    }
+
+    return $value
+}
