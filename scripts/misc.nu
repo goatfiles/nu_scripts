@@ -665,9 +665,6 @@ export def pipeif [
 ] {
     let value = $in
 
-    print $value
-    print $expected
-
     let condition = (if $invert {
         ($value | sort) == ($expected | sort)
     } else {
