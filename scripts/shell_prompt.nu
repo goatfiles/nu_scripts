@@ -74,7 +74,7 @@ def build-prompt [
             |it|
             $"(ansi reset)(ansi -e {fg: $it.fg, bg: $it.bg})($it.text)"
         } |
-        str collect
+        str join
     )
     $"($prompt)(ansi reset) "
 }
@@ -176,7 +176,7 @@ def create_right_prompt [
     if ($time) {
         let time_segment = ([
             (date now | date format '%m/%d/%Y %r')
-        ] | str collect)
+        ] | str join)
 
         $prompt += (color $time_segment red)
     }

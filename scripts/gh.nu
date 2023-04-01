@@ -77,7 +77,7 @@ export def "me protection" [
   repo: string
   branch: string
 ] {
-    pull (["" "repos" $owner $repo "branches" $branch "protection"] | str collect "/")
+    pull (["" "repos" $owner $repo "branches" $branch "protection"] | str join "/")
 }
 
 

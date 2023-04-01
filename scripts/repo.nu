@@ -87,7 +87,7 @@ export def pull [
         prompt fzf_ask $"Please choose a repo to pull from https://github.com/($owner): "
     )
 
-    let repository = ([$owner $choice] | str collect "/")
+    let repository = ([$owner $choice] | str join "/")
 
     ghq get -p $repository
 }
