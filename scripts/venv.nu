@@ -10,6 +10,7 @@
 #*
 
 use scripts/prompt.nu
+use std clip
 
 
 # TODO

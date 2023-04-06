@@ -11,46 +11,6 @@
 use scripts/prompt.nu
 
 # TODO
-export def clip [] {
-    # put the end of a pipe into the clipboard.
-    #
-    # the function is cross-platform and will work on windows.
-    #
-    # dependencies:
-    #   - xclip on linux x11
-    #   - clip.exe on windows
-    #
-    # original author: Reilly on
-    #   https://discord.com/channels/601130461678272522/615253963645911060/1000921565686415410
-    #
-    let input = $in
-    let input = if ($input | describe) == "string" {
-        $input | ansi strip
-    } else { $input }
-
-    if not (which clip.exe | is-empty) {
-        $input | clip.exe
-    } else if ($env | get -i WAYLAND_DISPLAY | is-empty) {
-        $input | xclip -sel clip
-    } else {
-        $input | wl-copy
-    }
-
-    print $input
-
-    print --no-newline $"(ansi white_italic)(ansi white_dimmed)saved to clipboard"
-    if ($input | describe) == "string" {
-        print " (stripped)"
-    }
-    print --no-newline $"(ansi reset)"
-
-    if ($nu.os-info.name == linux) {
-        notify-send "nushell.lib.misc.clip" "saved to clipboard"
-    }
-}
-
-
-# TODO
 export def yt-dl-names [
     --id (-i): string  # the id of the playlist
     --channel (-c): string  # the id of the channel
