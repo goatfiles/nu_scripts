@@ -1,7 +1,7 @@
 export def export [] {
     open $nu.plugin-path
     | lines
-    | str replace '^register (.*) \s+{' '{"binary": "$1",'
+    | str replace '^register (.*) \s+{' `{"binary": '$1',`
     | split list ""
     | each {|| to text | from json | update binary {|| get binary | path parse | get stem } }
 }
