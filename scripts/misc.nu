@@ -639,3 +639,48 @@ export def pipeif [
 
     return $value
 }
+
+
+# TODO
+def "nu-complete list-images" [] {
+    ls ($env.IMAGES_HOME | path join "**" "*") | get name
+}
+
+def get-image [
+    image: path
+] {
+    let image = (if ($image | is-empty) {
+         nu-complete list-images | to text | fzf | str trim
+    } else { $image })
+
+    if ($image | is-empty) {
+        error make --unspanned {
+            msg: "no image selected"
+        }
+    }
+
+    return $image
+}
+
+# TODO
+export def "images edit" [
+    image?: path@"nu-complete list-images"
+    --editor: string = kolourpaint
+    --devour (-d): bool
+] {
+    let image = (get-image $image)
+
+    if $devour {
+        devour $editor $image
+    } else {
+        ^$editor $image
+    }
+}
+
+# TODO
+export def "images view" [
+    image?: path@"nu-complete list-images"
+    --viewer: string = feh
+] {
+    ^$viewer (get-image $image)
+}
