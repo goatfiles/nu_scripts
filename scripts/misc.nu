@@ -354,7 +354,9 @@ export def "glow wide" [file: string] {
 export def "youtube share" [
     url: string
     --pretty: bool
+    --clip (-c): bool
 ] {
+    use std clip
     let video = (
         http get $url
         | str replace --all "<" "\n<"  # separate all HTML blocks into `<...> ...` chunks without the closing `</...>`
@@ -380,10 +382,22 @@ export def "youtube share" [
     )
 
     if $pretty {
-        return $"[*($video.title)*](char lparen)($video.url)(char rparen)"
+        let link = $"[*($video.title)*](char lparen)($video.url)(char rparen)"
+
+        if not $clip {
+            return $link
+        }
+
+        $link | clip
+        return
     }
 
-    $video
+    if not $clip {
+        return $video
+    }
+
+    $video.url | clip
+
 }
 
 
