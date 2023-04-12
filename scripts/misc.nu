@@ -698,3 +698,35 @@ export def "images view" [
 ] {
     ^$viewer (get-image $image)
 }
+
+
+def _throw-not-a-list-of-strings [files: any] {
+    error make --unspanned {
+        msg: $'please give a list of strings to `(ansi default_dimmed)(ansi default_italic)edit(ansi reset)`
+=> found `(ansi default_dimmed)(ansi default_italic)($files | describe)(ansi reset)`
+    ($files | table | lines | each {|file| $"($file)" } | str join "\n    ")'
+    }
+}
+
+export def edit [
+    ...rest: path
+    --no-auto-cmd (-n): bool
+    --auto-cmd: string = "lua require('telescope.builtin').find_files()"
+] {
+    let files = ($in | default [])
+    if (not ($files | is-empty)) and (($files | describe) != "list<string>") {
+        _throw-not-a-list-of-strings $files
+    }
+
+    let files = ($rest | append $files | uniq)
+
+    if ($files | is-empty) {
+        ^$env.EDITOR -c (
+            if $no_auto_cmd { "" } else { $auto_cmd }
+        )
+
+        return
+    }
+
+    ^$env.EDITOR $files
+}
