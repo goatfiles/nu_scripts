@@ -712,6 +712,7 @@ export def edit [
     ...rest: path
     --no-auto-cmd (-n): bool
     --auto-cmd: string = "lua require('telescope.builtin').find_files()"
+    --projects (-p): bool
 ] {
     let files = ($in | default [])
     if (not ($files | is-empty)) and (($files | describe) != "list<string>") {
@@ -722,7 +723,13 @@ export def edit [
 
     if ($files | is-empty) {
         ^$env.EDITOR -c (
-            if $no_auto_cmd { "" } else { $auto_cmd }
+            if $no_auto_cmd {
+                ""
+            } else if $projects {
+                "lua require('telescope').extensions.projects.projects{}"
+            } else {
+                $auto_cmd
+            }
         )
 
         return
