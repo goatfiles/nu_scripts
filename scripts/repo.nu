@@ -76,8 +76,12 @@ export def-env goto [
 
 # TODO
 export def pull [
-    owner: string = $"(git config --get user.name | str trim)"
+    owner?: string
 ] {
+    let owner = (if ($owner | is-empty) {
+        git config --get user.name | str trim
+    } else { $owner })
+
     let choice = (
         gh repo list $owner --json name |
         from json |

@@ -7,7 +7,11 @@
 #
 # i've fixed a bug when outside `$env.HOME` and refactored the source to use `str`
 # subcommands
-def spwd [sep: string = $"(char path_sep)"] {
+def spwd [sep?: string] {
+    let sep = (if ($sep | is-empty) {
+        char path_sep
+    } else { $sep })
+
     let tokens = (
         ["!" $env.PWD] | str join
         | str replace (["!" $nu.home-path] | str join) "~"
