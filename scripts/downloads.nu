@@ -1,25 +1,39 @@
-# TODO: documentation
+def downloads_dir [] {
+    $env.DOWNLOADS_DIR? | default (
+        $env.HOME | path join "downloads"
+    )
+}
+
 export def show [] {
-  ls $env.DOWNLOADS_DIR
+    let dir = (downloads_dir)
+
+    if ($dir | path exists) {
+        ls $dir
+    }
 }
 
-
-# TODO: documentation
 export def-env go [] {
-  cd $env.DOWNLOADS_DIR
+    let dir = (downloads_dir)
+
+    if not ($dir | path exists) {
+        mkdir $dir
+    }
+
+    cd $dir
 }
 
-
-# TODO: documentation
 export def clean [--force (-f): bool] {
-  if (show | length) > 0 {
-    let files = ($env.DOWNLOADS_DIR | path join *)
+    if (show | is-empty) {
+        print $"no files in ($env.DOWNLOADS_DIR)..."
+        return
+    }
+
+    let files = (downloads_dir | path join *)
+
     if $force {
       rm --trash $files
     } else {
       rm --trash --interactive $files
     }
-  } else {
-    print $"no files in ($env.DOWNLOADS_DIR)..."
-  }
+}
 }
