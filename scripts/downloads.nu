@@ -36,4 +36,7 @@ export def clean [--force (-f): bool] {
       rm --trash --interactive $files
     }
 }
+
+export def main [] {
+    show
 }
