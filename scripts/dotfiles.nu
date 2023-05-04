@@ -100,9 +100,10 @@ def pick_worktree [
 #
 #  . and then `dotfiles worktree` will let you pick one of the worktrees
 export def-env "worktree goto" [
-    --bare (-b): string = $"($env.DOTFILES_GIT_DIR)"  # the path to the *bare* repository (defaults to $env.DOTFILES_GIT_DIR)
+    --bare (-b): string  # the path to the *bare* repository (defaults to $env.DOTFILES_GIT_DIR)
     --debug (-d)
 ] {
+    let bare = ($bare | default $env.DOTFILES_GIT_DIR)
     let worktree = (pick_worktree $bare "Please choose a worktree to jump to: ")
 
     # compute the directory to jump to.
@@ -151,8 +152,9 @@ export def "worktree add" [
 
 # TODO
 export def "worktree remove" [
-    --bare (-b): string = $"($env.DOTFILES_GIT_DIR)"  # the path to the *bare* repository (defaults to $env.DOTFILES_GIT_DIR)
+    --bare (-b): string  # the path to the *bare* repository (defaults to $env.DOTFILES_GIT_DIR)
 ] {
+    let bare = ($bare | default $env.DOTFILES_GIT_DIR)
     let worktree = (pick_worktree $bare "Please choose a worktree to remove: ")
 
     let path = (
