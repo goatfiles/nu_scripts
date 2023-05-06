@@ -13,35 +13,6 @@ use scripts/prompt.nu
 
 alias GIT = ^git --git-dir $env.DOTFILES_GIT_DIR --work-tree $env.DOTFILES_WORKTREE
 
-def FZF_EDIT_PREVIEW [] { "bat $HOME/{} --color always" }
-
-# TODO
-export def-env edit [] {
-    # jump to any config file with $env.EDITOR
-    #
-    # the function will:
-    #   - (1) do nothing and abort when selecting no config file.
-    #   - (2) jump to the selected file and start it in a buffer
-    #
-    # dependencies:
-    #   - $env.EDITOR
-    #   - fzf
-    #
-    let choice = (
-        GIT lf --full-name ~ |
-        prompt fzf_ask "Please choose a config file to edit: " (FZF_EDIT_PREVIEW)
-    )
-
-    let path = ($env.HOME | path join $choice)
-    let directory = ($path | path dirname)
-    let filename = ($path | path basename)
-
-    cd $directory
-    ^$env.EDITOR $filename
-    cd -
-}
-
-
 # TODO
 export def find [
     regex: string
