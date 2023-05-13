@@ -1,0 +1,11 @@
+{
+    name: "nu-goat-scripts"
+    version: 0.1.0
+    description: "The collection of `nushell` scripts for GOATs."
+    documentation: "https://github.com/goatfiles/nu_scripts/blob/main/README.md"
+    maintainers: [
+        @amtoine
+        @atxr
+    ]
+    license: "https://github.com/goatfiles/nu_scripts/blob/main/LICENSE"
+}
