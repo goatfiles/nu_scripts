@@ -28,7 +28,7 @@ export def hc [category?: string@"nu-complete help categories"] {
 # credit to @/dev/adrien#4649
 # https://discord.com/channels/601130461678272522/615253963645911060/1019056732841967647
 export def-env up [nb: int = 1] {
-    let path = (1..$nb | each {|_| ".."} | reduce {|it, acc| $acc + "/" + $it})
+    let path = (1..($nb) | each {|_| ".."} | reduce {|it, acc| $acc + "/" + $it})
     cd $path
 }
 
