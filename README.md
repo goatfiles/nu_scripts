@@ -1,6 +1,8 @@
 # nu_scripts
 The collection of `nushell` scripts for GOATs.
 
+# :warning: :postal_horn: this repository has been moved to [`goatfiles/scripts`](https://github.com/goatfiles/scripts)
+
 ## source the scripts
 in my `nushell` environment configuration file,
 [`env.nu`](https://github.com/goatfiles/dotfiles/blob/main/.config/nushell/env.nu)
